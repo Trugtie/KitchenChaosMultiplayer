@@ -6,7 +6,17 @@ using Unity.Netcode;
 
 public class Player : NetworkBehaviour, IKitchenObjectParent
 {
-    //public static Player Instance { get; private set; }
+    public static event EventHandler OnAnyPlayerSpawned;
+    public static event EventHandler OnAnyPickupSomething;
+
+    public static void ResetStaticData()
+    {
+        OnAnyPlayerSpawned = null;
+        OnAnyPickupSomething = null;
+    }
+
+
+    public static Player LocalInstance { get; private set; }
 
     public event EventHandler OnPickupSomething;
 
@@ -28,18 +38,20 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
 
     private bool isWalking;
     private Vector3 lastInteractDir;
-    private void Awake()
-    {
-        //if (Instance != null)
-        //{
-        //    Debug.LogError("There is more than one Player instance");
-        //}
-        //Instance = this;
-    }
+
     private void Start()
     {
         GameInput.Instance.OnInteractAction += GameInput_OnInteractAction;
         GameInput.Instance.OnInteractAlternate += GameInput_OnInteractAlternate;
+    }
+
+    public override void OnNetworkSpawn()
+    {
+        if (IsOwner)
+        {
+            LocalInstance = this;
+        }
+        OnAnyPlayerSpawned?.Invoke(this, EventArgs.Empty);
     }
 
     private void GameInput_OnInteractAlternate(object sender, EventArgs e)
@@ -178,6 +190,7 @@ public class Player : NetworkBehaviour, IKitchenObjectParent
         if (kitchenObject != null)
         {
             OnPickupSomething?.Invoke(this, EventArgs.Empty);
+            OnAnyPickupSomething?.Invoke(this, EventArgs.Empty);
         }
     }
 

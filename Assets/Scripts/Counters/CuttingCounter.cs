@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 public class CuttingCounter : BaseCounter, IHasProgress
 {
@@ -29,13 +30,9 @@ public class CuttingCounter : BaseCounter, IHasProgress
                 if (HasRecipeWithInput(player.GetKitchenObject().GetKitchenObjectSO()))
                 {
                     //Player is carrying somthing can cut
-                    player.GetKitchenObject().SetKitchenObjectParent(this);
-                    this.cuttingProcess = 0;
-                    CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
-                    OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangeEventArgs
-                    {
-                        progressNormalized = (float)this.cuttingProcess / cuttingRecipeSO.cuttingProcessMax
-                    });
+                    KitchenObject kitchenObject = player.GetKitchenObject();
+                    kitchenObject.SetKitchenObjectParent(this);
+                    InteractLogicPlaceObjectOnServerRpc();
                 }
             }
             else
@@ -70,25 +67,61 @@ public class CuttingCounter : BaseCounter, IHasProgress
     {
         if (HasKitchenObject() && HasRecipeWithInput(GetKitchenObject().GetKitchenObjectSO()))
         {
-            this.cuttingProcess++;
-
-            OnCut?.Invoke(this, EventArgs.Empty);
-            OnAnyCut?.Invoke(this, EventArgs.Empty);
-
-            CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
-
-            OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangeEventArgs
-            {
-                progressNormalized = (float)this.cuttingProcess / cuttingRecipeSO.cuttingProcessMax
-            });
-
-            if (this.cuttingProcess >= cuttingRecipeSO.cuttingProcessMax)
-            {
-                KitchenObjectSO outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
-                GetKitchenObject().DestroySelf();
-                KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
-            }
+            InteractAlternateServerRpc();
+            TestingCuttingProgressDoneServerRpc();
         }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractAlternateServerRpc()
+    {
+        InteractAlternateClientRpc();
+    }
+
+    [ClientRpc]
+    private void InteractAlternateClientRpc()
+    {
+        this.cuttingProcess++;
+
+        OnCut?.Invoke(this, EventArgs.Empty);
+        OnAnyCut?.Invoke(this, EventArgs.Empty);
+
+        CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
+
+        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangeEventArgs
+        {
+            progressNormalized = (float)this.cuttingProcess / cuttingRecipeSO.cuttingProcessMax
+        });
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void TestingCuttingProgressDoneServerRpc()
+    {
+        CuttingRecipeSO cuttingRecipeSO = GetCuttingRecipeSOFromInput(GetKitchenObject().GetKitchenObjectSO());
+
+        if (this.cuttingProcess >= cuttingRecipeSO.cuttingProcessMax)
+        {
+            KitchenObjectSO outputKitchenObjectSO = GetOutputForInput(GetKitchenObject().GetKitchenObjectSO());
+            KitchenObject.DestroyKitchenObject(GetKitchenObject());
+            KitchenObject.SpawnKitchenObject(outputKitchenObjectSO, this);
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    private void InteractLogicPlaceObjectOnServerRpc()
+    {
+        InteractLogicPlaceObjectOnClientRpc();
+    }
+
+    [ClientRpc]
+    private void InteractLogicPlaceObjectOnClientRpc()
+    {
+        this.cuttingProcess = 0;
+
+        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangeEventArgs
+        {
+            progressNormalized = 0f
+        });
     }
 
     private bool HasRecipeWithInput(KitchenObjectSO inputKitchenObjectSO)

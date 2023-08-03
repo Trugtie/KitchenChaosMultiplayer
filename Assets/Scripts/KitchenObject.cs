@@ -61,13 +61,22 @@ public class KitchenObject : NetworkBehaviour
 
     public void DestroySelf()
     {
-        this.kitchenObjectParent.ClearKitchenObject();
         Destroy(gameObject);
+    }
+
+    public void ClearKitchenObjectOnParent()
+    {
+        this.kitchenObjectParent.ClearKitchenObject();
     }
 
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
         KitchenGameNetworkObject.Instance.SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent);
+    }
+
+    public static void DestroyKitchenObject(KitchenObject kitchenObject)
+    {
+        KitchenGameNetworkObject.Instance.DestroyKitchenObject(kitchenObject);
     }
 
     public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)

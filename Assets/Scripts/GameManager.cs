@@ -176,6 +176,11 @@ public class GameManager : NetworkBehaviour
         return this.state.Value == State.GameOver;
     }
 
+    public bool IsWaitingToStart()
+    {
+        return this.state.Value == State.WaitingToStart;
+    }
+
     public bool IsLocalPlayerReady()
     {
         return this.isLocalPlayerReady;

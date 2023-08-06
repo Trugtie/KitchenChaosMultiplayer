@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using System;
 
 public class KitchenGameNetworkObject : NetworkBehaviour
 {
@@ -12,6 +13,30 @@ public class KitchenGameNetworkObject : NetworkBehaviour
     private void Awake()
     {
         Instance = this;
+    }
+
+    public void StartHost()
+    {
+        NetworkManager.Singleton.ConnectionApprovalCallback += NetworkManager_ConnentionApprovalCallback;
+        NetworkManager.Singleton.StartHost();
+    }
+
+    private void NetworkManager_ConnentionApprovalCallback(NetworkManager.ConnectionApprovalRequest connectionApprovalRequest, NetworkManager.ConnectionApprovalResponse connectionApprovalResponse)
+    {
+        if (GameManager.Instance.IsWaitingToStart())
+        {
+            connectionApprovalResponse.Approved = true;
+            connectionApprovalResponse.CreatePlayerObject = true;
+        }
+        else
+        {
+            connectionApprovalResponse.Approved = false;
+        }
+    }
+
+    public void StartClient()
+    {
+        NetworkManager.Singleton.StartClient();
     }
 
     public void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)

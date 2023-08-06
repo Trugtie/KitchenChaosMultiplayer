@@ -20,7 +20,7 @@ public class TutorialUI : MonoBehaviour
     private void Start()
     {
         GameInput.Instance.OnRebindBinding += GameInput_OnRebindBinding;
-        GameManager.Instance.OnLocalPlayerReadtyChanged += GameManager_OnLocalPlayerReadtyChanged;
+        GameManager.Instance.OnLocalPlayerReadyChanged += GameManager_OnLocalPlayerReadtyChanged;
         UpdateVisual();
         Show();
     }

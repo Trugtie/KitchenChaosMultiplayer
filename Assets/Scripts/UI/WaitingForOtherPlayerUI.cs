@@ -6,7 +6,7 @@ public class WaitingForOtherPlayerUI : MonoBehaviour
 {
     private void Start()
     {
-        GameManager.Instance.OnLocalPlayerReadtyChanged += GameManager_OnLocalPlayerReadtyChanged;
+        GameManager.Instance.OnLocalPlayerReadyChanged += GameManager_OnLocalPlayerReadtyChanged;
         GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
         Hide();
     }

@@ -1,0 +1,39 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class WaitingForOtherPlayerUI : MonoBehaviour
+{
+    private void Start()
+    {
+        GameManager.Instance.OnLocalPlayerReadtyChanged += GameManager_OnLocalPlayerReadtyChanged;
+        GameManager.Instance.OnStateChanged += GameManager_OnStateChanged;
+        Hide();
+    }
+
+    private void GameManager_OnStateChanged(object sender, System.EventArgs e)
+    {
+        if (GameManager.Instance.IsCountdownToStartActive())
+        {
+            Hide();
+        }
+    }
+
+    private void GameManager_OnLocalPlayerReadtyChanged(object sender, System.EventArgs e)
+    {
+        if (GameManager.Instance.IsLocalPlayerReady())
+        {
+            Show();
+        }
+    }
+
+    private void Show()
+    {
+        gameObject.SetActive(true);
+    }
+
+    private void Hide()
+    {
+        gameObject.SetActive(false);
+    }
+}

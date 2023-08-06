@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 1963564544522736622}
   - component: {fileID: -5438967771798390200}
   - component: {fileID: 3810163389995956778}
-  m_Layer: 0
+  - component: {fileID: 6313404971155976253}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -55,6 +56,14 @@ MonoBehaviour:
   counterLayerMask:
     serializedVersion: 2
     m_Bits: 8
+  collisionsLayerMask:
+    serializedVersion: 2
+    m_Bits: 72
+  playerPosition:
+  - {x: -2, y: 0, z: 0}
+  - {x: 2, y: 0, z: 0}
+  - {x: -2, y: 0, z: -2}
+  - {x: 2, y: 0, z: -2}
   kitchenObjectHoldPoint: {fileID: 1963564544755214379}
 --- !u!114 &1963564544522736622
 MonoBehaviour:
@@ -110,6 +119,19 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   InLocalSpace: 0
   Interpolate: 1
+--- !u!65 &6313404971155976253
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1963564544522736531}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.7, y: 0.7, z: 0.7}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!1 &1963564544755214378
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,19 +249,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1963564543681151572}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1963564544377460561
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3929019730777861747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e13fc518975454048b25a221667d3d3d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 1963564544522736620}
 --- !u!114 &1791814238931610639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -254,6 +263,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TransitionStateInfoList: []
   m_Animator: {fileID: 5234103249801587456}
+--- !u!114 &1963564544377460561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3929019730777861747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e13fc518975454048b25a221667d3d3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 1963564544522736620}
 --- !u!95 &5234103249801587456 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 6024899996280613204, guid: 1c5dda3c7cd3cf742afcade5419faeab,

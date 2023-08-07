@@ -71,12 +71,12 @@ public class KitchenObject : NetworkBehaviour
 
     public static void SpawnKitchenObject(KitchenObjectSO kitchenObjectSO, IKitchenObjectParent kitchenObjectParent)
     {
-        KitchenGameNetworkObject.Instance.SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent);
+        KitchenGameMultiplayer.Instance.SpawnKitchenObject(kitchenObjectSO, kitchenObjectParent);
     }
 
     public static void DestroyKitchenObject(KitchenObject kitchenObject)
     {
-        KitchenGameNetworkObject.Instance.DestroyKitchenObject(kitchenObject);
+        KitchenGameMultiplayer.Instance.DestroyKitchenObject(kitchenObject);
     }
 
     public bool TryGetPlate(out PlateKitchenObject plateKitchenObject)

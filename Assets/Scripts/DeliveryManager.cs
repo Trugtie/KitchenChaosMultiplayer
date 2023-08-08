@@ -121,6 +121,8 @@ public class DeliveryManager : NetworkBehaviour
     [ServerRpc(RequireOwnership = false)]
     private void DeliveredCorrectRecipeServerRpc(int waitingRecipeSOListIndex)
     {
+        RecipeSO waitingRecipeSO = this.waitingRecipeSOList[waitingRecipeSOListIndex];
+        GameManager.Instance.AddMorePlayTime(waitingRecipeSO.cookingTime);
         DeliveredCorrectRecipeClientRpc(waitingRecipeSOListIndex);
     }
 
@@ -128,9 +130,8 @@ public class DeliveryManager : NetworkBehaviour
     private void DeliveredCorrectRecipeClientRpc(int waitingRecipeSOListIndex)
     {
         this.recipesDeliveredSuccessCount++;
-        this.waitingRecipeSOList.RemoveAt(waitingRecipeSOListIndex);
         RecipeSO waitingRecipeSO = this.waitingRecipeSOList[waitingRecipeSOListIndex];
-        GameManager.Instance.AddMorePlayTime(waitingRecipeSO.cookingTime);
+        this.waitingRecipeSOList.RemoveAt(waitingRecipeSOListIndex);
         OnCompletedRecipe?.Invoke(this, EventArgs.Empty);
         OnDeliveredSuccess?.Invoke(this, new OnDeliveredSuccessArgs { timePlus = waitingRecipeSO.cookingTime });
     }

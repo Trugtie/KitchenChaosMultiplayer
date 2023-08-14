@@ -16,4 +16,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 708836a22d930b9458672dfd399391f9, type: 2}
   - {fileID: 11400000, guid: 03985de56b620224bad44f7df8711f5d, type: 2}
   recipeName: Burger
-  cookingTime: 6
+  cookingTime: 11

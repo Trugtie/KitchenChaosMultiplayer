@@ -31,7 +31,7 @@ public class LobbyUI : MonoBehaviour
 
         this.createLobbyButton.onClick.AddListener(() =>
         {
-            createLobbyUI.Show();
+            createLobbyUI.Show(ReselectButton);
         });
 
         this.quickJoinButton.onClick.AddListener(() =>
@@ -84,5 +84,10 @@ public class LobbyUI : MonoBehaviour
     private void OnDestroy()
     {
         KitchenGameLobby.Instance.OnLobbyListChanged -= KitchenGameLobby_OnLobbyListChanged;
+    }
+
+    private void ReselectButton()
+    {
+        createLobbyButton.Select();
     }
 }

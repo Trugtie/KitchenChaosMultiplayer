@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -10,6 +11,8 @@ public class CreateLobbyUI : MonoBehaviour
     [SerializeField] private Button createPrivateButton;
     [SerializeField] private Button createPublicButton;
     [SerializeField] private Button closeButton;
+
+    private Action OnReselectButton;
 
     private void Awake()
     {
@@ -26,6 +29,7 @@ public class CreateLobbyUI : MonoBehaviour
         this.closeButton.onClick.AddListener(() =>
         {
             Hide();
+            OnReselectButton();
         });
     }
 
@@ -39,9 +43,11 @@ public class CreateLobbyUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    public void Show()
+    public void Show(Action OnReselectButton)
     {
         gameObject.SetActive(true);
+        createPublicButton.Select();
+        this.OnReselectButton = OnReselectButton;
     }
 
 }

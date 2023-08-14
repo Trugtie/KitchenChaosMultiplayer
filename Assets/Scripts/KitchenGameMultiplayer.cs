@@ -25,6 +25,18 @@ public class KitchenGameMultiplayer : NetworkBehaviour
 
     private string playerName;
 
+    public static bool isPlayMultiplayer;
+
+    private void Start()
+    {
+        if (!isPlayMultiplayer)
+        {
+            StartHost();
+
+            Loader.LoadNetwork(Loader.Scene.GameScene);
+        }
+    }
+
     private void Awake()
     {
         Instance = this;
@@ -159,15 +171,20 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     {
         KitchenObjectSO kitchenObjectSO = GetKitchenObjectSO(kitchenObjectSOIndex);
 
+        kitchenObjectParentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);
+        IKitchenObjectParent kitchenObjectParent = kitchenObjectNetworkObject.GetComponent<IKitchenObjectParent>();
+
+        if (kitchenObjectParent.HasKitchenObject())
+        {
+            return;
+        }
+
         Transform kitchenObjectTransform = Instantiate(kitchenObjectSO.prefab);
 
         NetworkObject kitchenNetworkObject = kitchenObjectTransform.GetComponent<NetworkObject>();
         kitchenNetworkObject.Spawn(true);
 
         KitchenObject kitchenObject = kitchenObjectTransform.GetComponent<KitchenObject>();
-
-        kitchenObjectParentNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);
-        IKitchenObjectParent kitchenObjectParent = kitchenObjectNetworkObject.GetComponent<IKitchenObjectParent>();
 
         kitchenObject.SetKitchenObjectParent(kitchenObjectParent);
     }
@@ -192,8 +209,16 @@ public class KitchenGameMultiplayer : NetworkBehaviour
     private void DestroyKitchenObjectServerRpc(NetworkObjectReference kitchenObjectNetworkObjectReference)
     {
         kitchenObjectNetworkObjectReference.TryGet(out NetworkObject kitchenObjectNetworkObject);
+
+        if (kitchenObjectNetworkObject == null)
+        {
+            return;
+        }
+
         KitchenObject kitchenObject = kitchenObjectNetworkObject.GetComponent<KitchenObject>();
+
         ClearKitchenObjectOnParentClientRpc(kitchenObjectNetworkObjectReference);
+
         kitchenObject.DestroySelf();
     }
 

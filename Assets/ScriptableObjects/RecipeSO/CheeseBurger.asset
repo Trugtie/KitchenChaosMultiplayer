@@ -17,4 +17,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 54869824e1ef8324e95f5a2b44d4e1a1, type: 2}
   - {fileID: 11400000, guid: 03985de56b620224bad44f7df8711f5d, type: 2}
   recipeName: CheeseBurger
-  cookingTime: 8
+  cookingTime: 12

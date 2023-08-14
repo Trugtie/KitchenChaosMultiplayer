@@ -34,6 +34,7 @@ public class HostDisconentUI : MonoBehaviour
     private void Show()
     {
         gameObject.SetActive(true);
+        mainMenuButton.Select();
     }
 
     private void Hide()
